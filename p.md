@@ -1,234 +1,210 @@
-Okay, here is a Product Requirements Document (PRD) for the YouTube Video Summarizer React Native Expo App.
+Okay, here is a Product Requirements Document (PRD) tailored for an AI agent tasked with building the YouTube Video Summarizer React Native Expo App.
 
 ---
 
 **Product Requirements Document: YouTube Video Summarizer App**
 
-**Version:** 1.0
-**Date:** May 21, 2024
-**Author:** [Your Name/Team Name]
-**Status:** Final
+**1. Introduction & Overview**
 
-**1. Introduction**
-
-This document outlines the requirements for a cross-platform (iOS, Android, Web PWA) application built using React Native Expo. The application allows users to generate concise summaries of YouTube videos using Google's Gemini 2.0 Flash-Lite AI model. Users can input YouTube links via pasting or sharing directly from the YouTube app. The generated summaries are stored persistently, can be read aloud using customizable text-to-speech (TTS), managed in a history view, and shared.
+This document outlines the requirements for building a cross-platform (iOS, Android, Web/PWA) application using React Native Expo. The core functionality of the app is to accept YouTube video links, generate summaries using the Gemini Flash-Lite model, store these summaries, and provide text-to-speech (TTS) playback with user controls. The application should be production-ready, robust, user-friendly, and maintainable.
 
 **2. Goals**
 
-*   Provide users with quick and accurate summaries of YouTube videos.
-*   Offer flexible summary options (type and length).
-*   Deliver an accessible experience with customizable text-to-speech playback.
-*   Enable easy sharing of both YouTube links (for summarizing) and generated summaries.
-*   Provide a persistent history of summarized videos for easy access.
-*   Ensure a seamless user experience across iOS, Android, and Web (as a PWA).
-*   Build a robust and performant application using the specified technology stack.
+*   **G1:** Provide users with concise and accurate summaries of YouTube videos.
+*   **G2:** Offer flexible summary options (type and length) to cater to different user needs.
+*   **G3:** Enable convenient consumption of summaries through adjustable text-to-speech playback.
+*   **G4:** Allow easy input of video links via pasting and direct sharing from the YouTube app.
+*   **G5:** Maintain a history of generated summaries for user reference.
+*   **G6:** Deliver a seamless and performant user experience across iOS, Android, and Web (as a PWA).
+*   **G7:** Enable sharing of generated summaries with others.
 
 **3. Target Audience**
 
-*   Students, researchers, and professionals looking to quickly grasp the content of YouTube videos without watching them entirely.
-*   Individuals with limited time who want to consume video content efficiently.
-*   Users seeking accessibility features like text-to-speech for consuming information.
-*   Anyone interested in quickly understanding the key takeaways from YouTube videos.
+Users who want to quickly understand the content of YouTube videos without watching them entirely, including students, researchers, professionals, and casual viewers looking for time efficiency.
 
 **4. Functional Requirements**
 
 **4.1. Video Link Input & Validation**
 
 *   **FR1.1 Paste Link:** Users must be able to paste a YouTube video URL directly into a designated text input field on the main screen.
-*   **FR1.2 Share-to-App:** Users must be able to share a YouTube video link directly from the native YouTube application (iOS/Android) or web browser into this app, triggering the summarization process.
-*   **FR1.3 Client-Side Validation:** The app must perform initial client-side validation on the input URL. This validation should strictly check if the domain is either `youtube.com` or `youtu.be`. Invalid formats should trigger user-friendly error feedback.
-*   **FR1.4 Backend Validation:** The backend must perform comprehensive validation of the YouTube link using `ytdlp-nodejs` to ensure it's a valid, accessible video link before proceeding.
+*   **FR1.2 Share-to-App:** Users must be able to share a YouTube video link directly from the native YouTube application (iOS/Android) or web browser into this app using the native "Share" functionality. This action should automatically populate the input field or directly trigger the summarization process initiation.
+*   **FR1.3 Initial Client-Side Validation:** The app must perform an initial, non-blocking check on the client-side to ensure the input string likely contains `youtube.com` or `youtu.be`. This is a preliminary check for user feedback; comprehensive validation occurs on the backend.
+*   **FR1.4 Backend Validation:** The backend must robustly validate the received URL, confirming it's a valid and accessible YouTube video link using `ytdlp-nodejs`. Handle cases like private videos, deleted videos, or invalid formats.
 
 **4.2. Summary Generation**
 
-*   **FR2.1 Trigger Generation:** Upon successful validation of a YouTube link (either pasted or shared), the user can initiate the summary generation process (e.g., via a "Summarize" button).
-*   **FR2.2 Backend Processing:** The frontend sends the validated YouTube link to the backend (Express.js).
-    *   The backend uses `ytdlp-nodejs` to attempt fetching the video transcript/captions.
-    *   If transcripts are unavailable, the backend informs the frontend, which then notifies the user (See FR8.2).
-    *   If transcripts are available, the backend sends the transcript data to the Gemini 2.0 Flash-Lite API, requesting a summary based on the user's selected type and length settings.
+*   **FR2.1 Core Summarization:** Upon receiving a valid YouTube link, the app must trigger a backend process to generate a summary.
+*   **FR2.2 AI Model:** Summary generation must utilize the **Gemini Flash-Lite** model via its API.
 *   **FR2.3 Summary Type Selection:**
-    *   Users must be able to select the desired summary type: "Brief", "Detailed", or "Key Point".
-    *   The default summary type must be "Brief".
-    *   The selected type must be sent to the backend to guide the Gemini API request.
-    *   Selection should be possible before initiating generation and via the "Edit" functionality (FR4.5).
+    *   Users must be able to select the desired type of summary: `Brief`, `Detailed`, or `Key Point`.
+    *   A default summary type of `Brief` must be pre-selected.
+    *   The selected type must be sent to the backend to influence the Gemini prompt/generation process.
 *   **FR2.4 Summary Length Selection:**
-    *   Users must be able to select the desired summary length: "Short", "Medium", or "Long".
-    *   The default summary length must be "Medium".
-    *   The selected length must be sent to the backend to guide the Gemini API request.
-    *   Selection should be possible before initiating generation and via the "Edit" functionality (FR4.5).
-*   **FR2.5 Metadata Fetching:**
-    *   The backend must attempt to fetch the video's Title and Thumbnail URL using `ytdlp-nodejs` concurrently or prior to summary generation.
-    *   Failure to retrieve Title or Thumbnail must *not* block or fail the summary generation process. Default placeholders or indication of missing data should be used on the frontend if necessary.
-*   **FR2.6 Generation Progress:** The UI must indicate that summary generation is in progress (e.g., loading spinner, progress message).
-*   **FR2.7 Cancel Generation:** Users must have a clear way to cancel a summary generation request while it is in progress. This action should stop the backend process if possible and revert the UI state.
+    *   Users must be able to select the desired length of the summary: `Short`, `Medium`, or `Long`.
+    *   A default summary length of `Medium` must be pre-selected.
+    *   The selected length must be sent to the backend to influence the Gemini prompt/generation process.
+*   **FR2.5 Fetch Video Metadata:** The backend must attempt to fetch the video's `Title` and `Thumbnail URL` using `ytdlp-nodejs` *before or concurrently* with summary generation.
+*   **FR2.6 Metadata Fetch Fallback:** Summary generation **must not fail** if the `Title` or `Thumbnail URL` cannot be retrieved. Default placeholders or an indication of missing data should be used in the display if necessary, but the summary generation itself should proceed if transcripts are available.
+*   **FR2.7 Transcript/Caption Dependency:** The backend process relies on fetching video transcripts or captions via `ytdlp-nodejs`.
+*   **FR2.8 Transcript Availability Fallback:** If a video lacks transcripts or captions, the backend must detect this. The app must clearly inform the user on the frontend that the video cannot be summarized due to the lack of available text data. No summary should be generated or stored in this case.
+*   **FR2.9 Cancellation:** Users must have a clear way to cancel a summary generation request while it is in progress (e.g., a "Cancel" button visible during the loading/processing state). The cancellation action should abort the backend request if possible or prevent the result from being processed/displayed if the request already completed.
 
-**4.3. Summary Storage**
+**4.3. Summary Display**
 
-*   **FR3.1 Persistent Storage:** Successfully generated summaries, along with associated metadata (Video URL, Video ID, Title (if available), Thumbnail URL (if available), Summary Text, Summary Type, Summary Length, Generation Timestamp), must be stored persistently in the MongoDB database.
-*   **FR3.2 Data Association:** Stored data should be associated with the user (if authentication is implemented in the future) or device locally if no user accounts are planned for v1.0. For this PRD, assume storage is local/device-based or tied to a unique identifier unless user accounts are added later.
+*   **FR3.1 Card Format:** Generated summaries must be displayed in a visually distinct card format.
+*   **FR3.2 Card Content:** Each summary card must display the following information:
+    *   Video Title (Fetched, or placeholder if unavailable)
+    *   Video Thumbnail (Fetched, or placeholder if unavailable)
+    *   Summary Text (Rendered from stored Markdown format)
+    *   Summary Type (`Brief`, `Detailed`, or `Key Point`)
+    *   Summary Length (`Short`, `Medium`, or `Long`)
+    *   Read Aloud Button
+    *   Share Button
+    *   Delete Button
+    *   Edit Button
+*   **FR3.3 Markdown Rendering:** The `Summary Text` must be stored in Markdown format and rendered correctly within the app (supporting basic formatting like paragraphs, lists, bold/italics if provided by Gemini).
 
-**4.4. Summary Display**
+**4.4. Text-to-Speech (TTS)**
 
-*   **FR4.1 Card Format:** Generated summaries must be displayed in a visually distinct card format.
-*   **FR4.2 Card Content:** Each summary card must display:
-    *   Video Title (or placeholder if unavailable)
-    *   Video Thumbnail (or placeholder if unavailable)
-    *   Summary Text (formatted using Markdown)
-    *   Summary Type (e.g., "Type: Brief")
-    *   Summary Length (e.g., "Length: Medium")
-    *   "Read Aloud" Button
-    *   "Share" Button
-    *   "Delete" Button
-    *   "Edit" Button
-*   **FR4.3 Markdown Rendering:** The summary text must be rendered correctly from its Markdown format (e.g., supporting headings, lists, bold, italics).
-*   **FR4.4 Immediate Display:** Upon successful generation, the new summary card should be displayed prominently to the user, potentially replacing the input view or appearing at the top of a results/history list.
-*   **FR4.5 Edit Functionality:** The "Edit" button on a summary card must allow the user to change the Summary Type and Summary Length for *that specific video*. Selecting new options and confirming should trigger a *new* summary generation request to the backend using the original video link and the newly selected parameters. The updated summary will replace the previous one or be stored as a new entry linked to the original video (TBD based on desired UX - Recommendation: Replace the existing entry).
+*   **FR4.1 Read Aloud Functionality:** A "Read Aloud" button must be present on each summary card. Tapping this button initiates TTS playback of the `Summary Text`.
+*   **FR4.2 Playback Control:** Basic playback controls (Play/Pause) must be available once TTS is initiated.
+*   **FR4.3 Speed Adjustment:** Users must be able to adjust the playback speed of the TTS.
+    *   Control: Provide a slider or stepper mechanism.
+    *   Range: Allow speeds from 0.5x up to 16x the normal speed.
+    *   Default: Normal speed (1x).
+    *   Persistence: Speed setting should ideally persist across sessions (configurable in Settings).
+*   **FR4.4 Pitch Adjustment:** Users must be able to adjust the pitch of the TTS voice.
+    *   Control: Provide a slider or stepper mechanism.
+    *   Range: Define a reasonable pitch range (e.g., 0.5x to 2.0x).
+    *   Default: Normal pitch (1x).
+    *   Persistence: Pitch setting should ideally persist across sessions (configurable in Settings).
+*   **FR4.5 Voice Selection:** Users must be able to select from available TTS voices provided by the underlying native TTS engine (Expo/OS specific).
+    *   Control: Provide a dropdown or list selection.
+    *   Default: System default voice.
+    *   Persistence: Voice selection should ideally persist across sessions (configurable in Settings).
+*   **FR4.6 Universal Availability:** TTS functionality (including all controls) must be available for *all* summaries displayed in the app (newly generated or from history).
 
-**4.5. Text-to-Speech (TTS)**
+**4.5. History Management**
 
-*   **FR5.1 Read Aloud Trigger:** A "Read Aloud" button must be present on every summary card. Tapping this button initiates TTS playback of the Summary Text.
-*   **FR5.2 Playback Controls:** Basic playback controls (Play/Pause, Stop) must be available once TTS starts.
-*   **FR5.3 Availability:** TTS functionality must be available for all summary types (Brief, Detailed, Key Point) and lengths (Short, Medium, Long).
-*   **FR5.4 Speed Control:** Users must be able to adjust the TTS playback speed.
-    *   Speed adjustment must be available via the Settings screen (FR7.1).
-    *   The speed range should allow adjustments up to 16x the normal speed (consider practical upper limits like 2x, 3x, 4x first, ensure 16x is technically feasible and usable before committing). *Clarification: Let's aim for standard ranges first, e.g., 0.5x to 4x, and specify 16x as a target if feasible.* Provide discrete steps or a slider.
-*   **FR5.5 Pitch Control:** Users must be able to adjust the TTS playback pitch via the Settings screen (FR7.1). Provide discrete steps or a slider.
-*   **FR5.6 Voice Selection:** Users must be able to select from available TTS voices (system-provided or bundled) via the Settings screen (FR7.1). The app should list available voices dynamically.
-*   **FR5.7 Setting Persistence:** TTS settings (Speed, Pitch, Voice) must be saved locally on the device and persist across app sessions.
+*   **FR5.1 History Screen:** The app must include a dedicated "History" screen.
+*   **FR5.2 Summary List:** The History screen must display a list of all previously generated and saved summaries.
+*   **FR5.3 List Item Display:** Each item in the history list must display at least the `Video Thumbnail` (or placeholder) and `Video Title` (or placeholder) for quick identification.
+*   **FR5.4 Access Full Summary:** Tapping on a history list item must navigate the user to view the full summary card (as defined in FR3.2) for that entry.
+*   **FR5.5 Deletion:**
+    *   Users must be able to delete individual summaries from the history (e.g., via the "Delete Button" on the card or a swipe action in the list).
+    *   A confirmation prompt should appear before deletion.
+*   **FR5.6 Link in Menu:** Implement a Hamburg menu (or similar navigation pattern) that, when viewing a specific summary, provides an option/link to view/copy the original YouTube video link associated with that summary.
 
-**4.6. History Management**
+**4.6. Editing Summaries**
 
-*   **FR6.1 History Screen:** The app must include a dedicated "History" screen accessible via navigation (e.g., bottom tab, hamburger menu).
-*   **FR6.2 History List:** The History screen must display a list of all previously generated and saved summaries.
-*   **FR6.3 List Item Display:** Each item in the history list must display the Video Thumbnail (or placeholder) and Video Title (or placeholder).
-*   **FR6.4 Access Summary:** Tapping a history item must navigate the user to view the full summary card for that entry.
-*   **FR6.5 Delete Summary:**
-    *   Users must be able to delete individual summaries from the history. This action should be available from the summary card ("Delete" button).
-    *   Consider adding swipe-to-delete functionality on the history list items as well.
-    *   Deletion must remove the corresponding record from the MongoDB database.
-*   **FR6.6 History Ordering:** History items should be displayed in reverse chronological order (most recent first).
+*   **FR6.1 Edit Functionality:** An "Edit" button must be present on each summary card.
+*   **FR6.2 Edit Action:** Tapping the "Edit" button should allow the user to change the `Summary Type` (Brief, Detailed, Key Point) and `Summary Length` (Short, Medium, Long) for the *currently viewed video*.
+*   **FR6.3 Re-generation:** Upon confirming the new Type/Length settings, the app must trigger a *new* summary generation request to the backend using the original video link and the updated parameters. The new summary will replace the previous one (or be stored as a new entry if versioning is desired - for simplicity, replacement is acceptable unless specified otherwise).
 
 **4.7. Settings**
 
 *   **FR7.1 Settings Screen:** The app must include a dedicated "Settings" screen.
-*   **FR7.2 TTS Configuration:** The Settings screen must provide controls for adjusting and saving TTS preferences:
-    *   Playback Speed (Slider/Stepper, range 0.5x to 4x, target up to 16x if feasible)
-    *   Playback Pitch (Slider/Stepper)
-    *   Voice Selection (Dropdown/List of available voices)
+*   **FR7.2 TTS Configuration:** The Settings screen must allow users to configure default TTS settings:
+    *   Default Playback Speed
+    *   Default Pitch
+    *   Default Voice
 
 **4.8. Sharing**
 
-*   **FR8.1 Share Summary:** A "Share" button on the summary card must allow users to share the generated Summary Text (plain text format) using the native platform sharing capabilities. Optionally include the original video link in the shared content.
-
-**4.9. PWA Functionality**
-
-*   **FR9.1 Installable:** The web version of the app must be a Progressive Web App (PWA), allowing users to "install" it to their home screen on supported mobile and desktop devices.
-*   **FR9.2 Offline Support:** Basic offline support should be implemented (e.g., app shell, viewing cached history if possible). Full offline summary generation is out of scope.
-*   **FR9.3 Manifest & Service Worker:** A web app manifest file and a service worker must be implemented to enable PWA features.
+*   **FR8.1 Share Summary:** A "Share" button must be present on each summary card.
+*   **FR8.2 Share Action:** Tapping the "Share" button must invoke the native OS sharing dialog, allowing the user to share the `Summary Text` (and potentially the original Video Link and Title) through other apps (e.g., messaging, email, social media). Format the shared content appropriately (e.g., "Summary for '[Video Title]':\n[Summary Text]\nOriginal Video: [Video Link]").
 
 **5. Non-Functional Requirements**
 
-*   **NFR1. Performance:**
+*   **NFR1 Performance:**
     *   The app must be responsive and performant on all target platforms (iOS, Android, Web).
     *   UI transitions should be smooth.
-    *   Summary generation time should be minimized; provide clear feedback during processing.
-    *   List scrolling (History) must be smooth even with a large number of entries.
-*   **NFR2. Usability:**
-    *   The app must have an intuitive and clean user interface.
-    *   Navigation should be straightforward.
-    *   Error messages must be clear and helpful.
-    *   Provide clear visual feedback for user actions (button taps, loading states, success/error).
-*   **NFR3. Reliability:**
-    *   The app should handle network interruptions gracefully.
-    *   Backend services should be reliable and handle errors robustly.
-    *   Data stored in MongoDB must maintain integrity.
-*   **NFR4. Maintainability:**
-    *   The codebase must follow best practices for React Native, Expo, Node.js, and MongoDB.
-    *   Code should be well-documented and organized into a modular structure (`frontend/`, `backend/`).
-    *   Components should be reusable where applicable.
-*   **NFR5. Compatibility:**
-    *   The app must function correctly on supported versions of iOS, Android, and modern web browsers (Chrome, Firefox, Safari, Edge).
-*   **NFR6. Security:**
-    *   API keys (Gemini) must be securely stored on the backend and not exposed in the frontend code.
-    *   Input sanitization should be performed on the backend to prevent potential injection attacks (though less critical with just URLs, still good practice).
-    *   Communication between frontend and backend should ideally use HTTPS.
+    *   Summary generation time should be optimized, with clear loading/progress indicators shown to the user.
+*   **NFR2 Usability:**
+    *   The user interface must be clean, intuitive, and easy to navigate.
+    *   Provide clear feedback to the user for actions (e.g., link validation, generation start/end, errors, cancellation).
+*   **NFR3 Compatibility:**
+    *   The app must function correctly on recent versions of iOS, Android, and modern web browsers.
+    *   **PWA:** The web version must be a Progressive Web App, installable on the user's home screen/desktop, and offer basic offline capabilities (e.g., viewing cached history) if feasible. Configure necessary service workers and manifest files via Expo.
+*   **NFR4 Reliability & Error Handling:**
+    *   Implement robust error handling for all potential failure points: network requests (YouTube, Gemini API, backend), API errors, data validation, TTS engine issues, database operations, missing transcripts.
+    *   Display user-friendly error messages.
+    *   Handle edge cases gracefully (e.g., extremely long videos, rate limiting).
+*   **NFR5 Maintainability:**
+    *   Codebase must be well-documented, following standard JavaScript and React Native best practices.
+    *   The project structure must be modular (as specified in Section 6.4).
+    *   Code should be clean and readable.
+*   **NFR6 Storage:**
+    *   Summary data must be persisted reliably in the MongoDB database.
 
-**6. Design & UX**
+**6. Technical Specifications**
 
-*   **UI6.1 Theme:** A consistent and clean visual theme should be applied throughout the app.
-*   **UI6.2 Layout:** Responsive layout adapting to different screen sizes (mobile, tablet, web).
-*   **UI6.3 Accessibility:** Consider accessibility guidelines (WCAG) for color contrast, font sizes, and screen reader compatibility, especially given the TTS feature.
+*   **TS1 Frontend:** React Native Expo (using JavaScript).
+*   **TS2 Backend:** Node.js with Express.js framework.
+*   **TS3 AI Integration:** Backend integrates with the **Gemini Flash-Lite** model via its official API.
+*   **TS4 YouTube Data Handling:** Backend uses the `ytdlp-nodejs` library (`npm i ytdlp-nodejs`) for:
+    *   Validating YouTube URLs.
+    *   Fetching video metadata (Title, Thumbnail).
+    *   Fetching video transcripts/captions.
+*   **TS5 Database:** MongoDB for storing summary data, video metadata, and user preferences (like TTS settings if persisted server-side, though client-side persistence for settings might be simpler).
+*   **TS6 Cross-Platform Build:** Utilize Expo's build services (EAS Build) or standard Expo tooling for generating iOS, Android, and Web builds.
+*   **TS7 PWA Configuration:** Configure `app.json` and potentially custom service workers (if needed beyond Expo defaults) for PWA functionality (install prompt, offline caching basics).
+*   **TS8 Project Structure:**
+    *   Maintain a clear separation between frontend and backend code within the repository.
+    *   **Root Directory:**
+        *   `frontend/` (Contains all React Native Expo app code)
+            *   `src/`
+                *   `screens/` (Main view components: Home, History, Settings, SummaryDetail)
+                *   `components/` (Reusable UI elements: SummaryCard, TextInput, Buttons, TTSControls)
+                *   `services/` (API interaction logic, TTS service wrapper)
+                *   `store/` or `context/` (State management, e.g., Zustand, Redux Toolkit, Context API)
+                *   `navigation/` (App navigation setup)
+                *   `hooks/` (Custom React hooks)
+                *   `utils/` (Helper functions)
+                *   `assets/` (Images, fonts)
+            *   `app.json`
+            *   `babel.config.js`
+            *   `package.json`
+        *   `backend/` (Contains all Node.js/Express.js server code)
+            *   `src/`
+                *   `controllers/` (Request handling logic)
+                *   `routes/` (API endpoint definitions)
+                *   `services/` (Business logic: Gemini interaction, ytdlp logic, DB operations)
+                *   `models/` (MongoDB schema definitions - e.g., using Mongoose)
+                *   `config/` (Environment variables, DB connection)
+                *   `middleware/` (Error handling, validation)
+                *   `utils/` (Helper functions)
+            *   `server.js` or `index.js` (Main server entry point)
+            *   `package.json`
+        *   `.gitignore`
+        *   `README.md`
+    *   Ensure modules within both frontend and backend are cohesive and loosely coupled.
 
-**7. Technical Specifications**
+**7. Data Model (MongoDB)**
 
-*   **TS1. Frontend:**
-    *   Framework/Platform: React Native with Expo SDK
-    *   Language: JavaScript
-    *   State Management: (Choose one: Context API, Redux Toolkit, Zustand, etc. - Specify based on team preference)
-    *   Navigation: React Navigation
-    *   TTS Implementation: `expo-speech` or a suitable alternative library.
-    *   Markdown Rendering: `react-native-markdown-display` or similar.
-*   **TS2. Backend:**
-    *   Framework: Express.js
-    *   Language: Node.js (JavaScript)
-    *   Video Processing: `ytdlp-nodejs` (for link validation, metadata, transcript fetching)
-    *   AI Integration: Google Gemini API (specifically targeting `gemini-2.0-flash-lite` if available, otherwise adjust to available models like `gemini-1.5-flash`) via official Node.js SDK or REST API calls.
-*   **TS3. Database:**
-    *   Type: NoSQL
-    *   Provider: MongoDB (Self-hosted or Atlas)
-*   **TS4. Hosting:** (Specify based on choice, e.g., Vercel/Netlify for Frontend/PWA, Heroku/AWS/GCP/Fly.io for Backend, MongoDB Atlas for DB).
-*   **TS5. Project Structure:**
-    *   Monorepo or separate repositories containing:
-        *   `frontend/` (React Native Expo app)
-        *   `backend/` (Express.js API)
-    *   Shared types/interfaces if using a monorepo.
-
-**8. Data Management & Schema**
-
-*   **DM8.1 MongoDB Schema:** A collection (e.g., `summaries`) should store documents with fields like:
+*   **Collection:** `summaries`
+*   **Schema:**
     *   `_id`: ObjectId (Primary Key)
-    *   `videoId`: String (Extracted YouTube Video ID)
-    *   `videoUrl`: String (Original YouTube URL)
-    *   `title`: String (Optional, fetched video title)
-    *   `thumbnailUrl`: String (Optional, fetched thumbnail URL)
-    *   `summaryText`: String (Generated summary content)
-    *   `summaryType`: String (Enum: "Brief", "Detailed", "Key Point")
-    *   `summaryLength`: String (Enum: "Short", "Medium", "Long")
-    *   `generatedAt`: ISODate (Timestamp of generation)
-    *   `userId`: String/ObjectId (Optional, for future user accounts - can be device ID initially)
-    *   *(Consider adding `transcriptFetched`: Boolean, `metadataFetched`: Boolean for debugging/tracking)*
-*   **DM8.2 Data Flow:**
-    1.  User inputs URL (Paste/Share).
-    2.  Frontend performs basic validation.
-    3.  Frontend sends URL, selected Type/Length to Backend.
-    4.  Backend validates URL fully via `ytdlp-nodejs`.
-    5.  Backend fetches Transcript & Metadata (Title/Thumbnail) via `ytdlp-nodejs`.
-    6.  Backend calls Gemini API with transcript and Type/Length parameters.
-    7.  Backend receives summary from Gemini.
-    8.  Backend stores summary details + metadata in MongoDB.
-    9.  Backend returns summary details + metadata to Frontend.
-    10. Frontend displays the summary card.
+    *   `videoUrl`: String (Indexed, Unique potentially combined with userId/deviceId if implementing user accounts)
+    *   `videoTitle`: String (Optional)
+    *   `videoThumbnailUrl`: String (Optional)
+    *   `summaryText`: String (Markdown format)
+    *   `summaryType`: String (Enum: 'Brief', 'Detailed', 'Key Point')
+    *   `summaryLength`: String (Enum: 'Short', 'Medium', 'Long')
+    *   `createdAt`: Date (Timestamp)
+    *   `updatedAt`: Date (Timestamp)
+    *   `userId` / `deviceId`: String (Optional - consider for future user accounts or identifying unique users/devices)
 
-**9. Error Handling & Edge Cases**
+**8. Final Instructions for AI Agent**
 
-*   **EH9.1 Invalid YouTube Link:** Display clear error message on frontend after both client-side and backend validation failures.
-*   **EH9.2 No Transcripts/Captions:** If `ytdlp-nodejs` cannot retrieve transcripts, the backend must inform the frontend. The frontend must display a user-friendly message like "Sorry, this video does not have transcripts or captions available, and cannot be summarized."
-*   **EH9.3 Gemini API Errors:** Handle potential errors from the Gemini API (e.g., rate limits, content filtering, server errors) and display appropriate messages to the user.
-*   **EH9.4 Network Errors:** Handle fetch/API call failures due to network issues (offline, unstable connection) gracefully. Allow retries where appropriate.
-*   **EH9.5 `ytdlp-nodejs` Errors:** Handle errors during metadata/transcript fetching (e.g., video unavailable, region-locked, private).
-*   **EH9.6 TTS Errors:** Handle errors during TTS initialization or playback (e.g., voice unavailable, engine error).
-*   **EH9.7 Storage Errors:** Handle potential errors during communication with MongoDB.
+*   **Completeness:** Implement *all* requirements specified in this document. This is for a final, production-ready product, not an MVP.
+*   **Quality:** Ensure the code is well-documented, follows JavaScript, React Native, and Node.js best practices, and is highly maintainable and modular as per the defined structure.
+*   **Functionality:** The final application must be fully functional across iOS, Android, and Web (as an installable PWA).
+*   **Testing:** Thoroughly test all features, including input methods, summary generation variations, TTS controls, history management, error handling, and cross-platform compatibility.
+*   **User Experience:** Prioritize a smooth, intuitive, and user-friendly experience.
+*   **Adherence:** Strictly follow the specified technical stack and libraries (React Native Expo, Node.js/Express, Gemini Flash-Lite, `ytdlp-nodejs`, MongoDB).
 
-**10. Success Metrics**
 
-*   Number of successful summaries generated per day/week/month.
-*   User retention rate.
-*   App Store / Play Store ratings and reviews (if applicable).
-*   PWA installation rate.
-*   Frequency of TTS feature usage.
-*   Frequency of summary sharing.
-*   Average summary generation time.
-*   Error rate (API errors, validation failures).
 
 ---
 the following is the example code for the backend API endpoint to generate summaries using the Gemini 2.0 Flash-Lite model:
