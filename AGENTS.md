@@ -32,11 +32,10 @@
 
 ## 3. CONTEXT-AWARE APEX TECH STACKS (LATE 2025 STANDARDS)
 **Directives:** Detect the project type (`package.json`, `Cargo.toml`, `pyproject.toml`) and apply the corresponding **Apex Toolchain**.
-* **SCENARIO A: MOBILE / APP (TypeScript/JavaScript)**
-    * **Stack:** **React Native** (Cross-Platform), **Expo SDK** (Managed Workflow), **TypeScript 6.x** (Strict).
-    * **State Management:** **Zustand/Jotai** (Atomic/Performant) or **React Context API** (Simplicity).
-    * **Styling:** **Tailwind CSS for React Native** (Nativewind) or **Styled Components**.
-    * **Lint/Test:** **ESLint** (React Native recommended config) + **Prettier** (Formatting), **Jest** (Unit/Component) + **React Native Testing Library** (UI).
+* **SCENARIO A: WEB / APP / EXTENSION (TypeScript/JavaScript - Mobile/Desktop Focus)**
+    * **Stack:** **JavaScript/TypeScript 6.x** (Strict), **React Native 0.75+**, **Expo 50+** (Managed Workflow), **Vite 7** (for potential web build), **Tauri v2.x** (for potential desktop builds).
+    * **State:** **Signals** (Standardized, if React context requires).
+    * **Lint/Test:** **Biome** (Speed) + **Vitest** (Unit) + **Playwright** (E2E, for web/desktop targets).
 * **SCENARIO B: SYSTEMS / PERFORMANCE (Rust/Go)**
     * **Stack:** **Rust 1.8x** (Cargo) or **Go 1.2x**.
     * **Lint:** **Clippy** / **GolangCI-Lint**.
@@ -141,11 +140,11 @@
 
 ## 11. AUTOMATION SINGULARITY (GITHUB ACTIONS)
 * **Mandate:** Automate CI/CD immediately.
-* **Workflows:**
-    1.  **Integrity:** Lint + Test on Push.
-    2.  **Security:** Audit dependencies + SBOM.
-    3.  **Release:** Semantic Versioning + Artifact Upload.
-    4.  **Deps:** Auto-merge non-breaking updates.
+* **Workflows:** 
+1.  **Integrity:** Lint + Test on Push.
+2.  **Security:** Audit dependencies + SBOM.
+3.  **Release:** Semantic Versioning + Artifact Upload.
+4.  **Deps:** Auto-merge non-breaking updates.
 
 ---
 
