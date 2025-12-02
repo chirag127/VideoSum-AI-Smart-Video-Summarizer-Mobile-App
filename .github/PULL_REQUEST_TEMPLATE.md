@@ -1,56 +1,52 @@
-# Pull Request Checklist & Review Template
+# Pull Request Template
 
-**Repository:** `VideoSum-AI-Powered-Video-Summarization-Mobile-Platform`
+Thank you for your contribution to **VideoSum-AI-Video-Summarizer-Mobile-App**!
 
-This template ensures that all Pull Requests (PRs) meet the **Apex Technical Authority** standards for zero-defect, high-velocity deployment on the React Native/Expo platform.
+Please review the following checklist before submitting your pull request:
 
----
+## Checklist
 
-## 🚀 Summary of Changes
+- [ ] **Reasonable Change:** My changes are well-reasoned and address the issue/feature described.
+- [ ] **Self-Contained:** My changes are not overly broad and focus on a single concern.
+- [ ] **Tests:** I have added or updated unit/integration tests to cover my changes.
+- [ ] **Documentation:** I have updated relevant documentation (if applicable).
+- [ ] **Code Style:** My code follows the project's established code style (linted by Ruff, formatted by Ruff).
+- [ ] **Build & Test:** My changes pass all CI checks and tests locally (`pytest`, `npm test`).
+- [ ] **Dep Updates:** I have updated dependencies if necessary and verified compatibility.
+- [ ] **AI Agent Alignment:** My changes align with the **AGENTS.md** directives and maintain the Apex Technical Authority standards.
 
-<!-- Briefly describe what this PR achieves. Link relevant issues using keywords like `Fixes #123` or `Implements feature #456`. -->
+## Description
 
-## ✅ Checklist (Developer Actions)
+Please provide a clear and concise description of your changes. What problem does this pull request solve? What new feature does it introduce?
 
-Before requesting a review, ensure *every* item below is checked:
+**Related Issue(s):** (Link to any relevant GitHub issues, e.g., `Fixes #123`)
 
-- [ ] **Code Quality:** All code adheres to strict TypeScript standards and Biome/Ruff formatting rules (if applicable to tooling). DRY principles maintained.
-- [ ] **Feature Isolation:** Changes are atomic and focus on a single feature or fix. No scope creep.
-- [ ] **Testing:** New unit tests (Vitest) or E2E tests (Playwright/Detox) are added/updated to cover new logic. All existing tests pass.
-- [ ] **Performance:** No blocking UI operations. Asynchronous operations are correctly handled (React Query/Redux Toolkit setup).
-- [ ] **Architecture:** Changes respect the Feature-Sliced Design (FSD) boundaries within the React Native structure (Layers: App, Pages, Features, Entities, Shared).
-- [ ] **Documentation:** Relevant internal code comments (JSDoc/TSDoc) are updated.
-- [ ] **CI/CD Readiness:** Local builds (`npm run build:android` / `npm run build:ios`) succeed without warnings.
-- [ ] **Security:** No hardcoded secrets. Dependencies are reviewed for known vulnerabilities.
+## Type of Change
 
-## 🧪 Verification Steps (Reviewer Actions)
+- [ ] Bug fix (non-breaking change which fixes an issue)
+- [ ] New feature (non-breaking change which adds functionality)
+- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Documentation update
+- [ ] Refactoring
+- [ ] Performance improvement
 
-Reviewers must verify the following in addition to code logic:
+## How Has This Been Tested?
 
-1.  **Build Verification:** Can the reviewer successfully build and run the platform on both target OSs (iOS/Android)?
-    *   *Command:* `npx expo run:ios` and `npx expo run:android`
-2.  **Feature Validation:** Does the change behave *exactly* as described in the issue/summary?
-3.  **Performance Spot Check:** Test summarization speed on a sample video file. Look for UI stuttering during video processing/API calls.
-4.  **Type Safety:** Review type definitions. Are there any `any` types introduced that could have been strictly typed?
+Describe the tests that you ran to verify your changes. Please also note any relevant testing configurations.
 
-## ✍️ Architectural Notes (Self-Correction/Alignment)
+- **Local Testing:**
+  - Unit Tests: `pytest`
+  - E2E/Integration Tests: `npm run test:e2e` (or relevant command)
+  - Manual Testing:
+    - **iOS Simulator/Device:** [Describe steps]
+    - **Android Emulator/Device:** [Describe steps]
 
-<!-- Use this section to document any deviations from the standard FSD structure or any complex async interactions that require deep understanding. -->
+- **CI/CD Pipeline:** The pipeline will run tests and checks on the repository `https://github.com/chirag127/VideoSum-AI-Video-Summarizer-Mobile-App`.
 
-## 🏷️ Related Artifacts
+## Screenshots (If Applicable)
 
-*   **Project Repository:** [VideoSum-AI-Powered-Video-Summarization-Mobile-Platform](https://github.com/chirag127/VideoSum-AI-Powered-Video-Summarization-Mobile-Platform)
-*   **CI Pipeline Status:** [View Workflow](https://github.com/chirag127/VideoSum-AI-Powered-Video-Summarization-Mobile-Platform/actions/workflows/ci.yml)
-*   **Latest Release:** [Releases](https://github.com/chirag127/VideoSum-AI-Powered-Video-Summarization-Mobile-Platform/releases)
+If your changes affect the UI, please provide screenshots or a video recording of the changes.
 
----
+## Additional Context
 
-**Reviewer Sign-off:**
-
-- [ ] Approved
-- [ ] Requested Changes (Comments attached)
-
-**Status Update:**
-
-- [ ] Merge Ready
-- [ ] Blocked (Reason: ___________)
+Add any other context about the problem or your solution here.
