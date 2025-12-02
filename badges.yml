@@ -1,19 +1,32 @@
-badges:
-  - name: "Build Status"
-    badge_url: "https://img.shields.io/github/actions/workflow/status/chirag127/VideoSum-AI-Powered-Video-Summarization-Mobile-Platform/ci.yml?branch=main&style=flat-square&label=Build"
-    link_url: "https://github.com/chirag127/VideoSum-AI-Powered-Video-Summarization-Mobile-Platform/actions/workflows/ci.yml"
-  - name: "Code Coverage"
-    badge_url: "https://img.shields.io/codecov/c/github/chirag127/VideoSum-AI-Powered-Video-Summarization-Mobile-Platform?style=flat-square"
-    link_url: "https://codecov.io/gh/chirag127/VideoSum-AI-Powered-Video-Summarization-Mobile-Platform"
-  - name: "Tech Stack"
-    badge_url: "https://img.shields.io/badge/Stack-ReactNative%7CExpo%7CTypeScript%7CAI-blue?style=flat-square"
-    link_url: "https://github.com/chirag127/VideoSum-AI-Powered-Video-Summarization-Mobile-Platform#tech-stack"
-  - name: "Code Quality"
-    badge_url: "https://img.shields.io/badge/Code%20Quality-Biome-green?style=flat-square&logo=biome"
-    link_url: "https://biomejs.dev/"
-  - name: "License"
-    badge_url: "https://img.shields.io/badge/License-CC%20BY--NC%204.0-blue.svg?style=flat-square"
-    link_url: "https://creativecommons.org/licenses/by-nc/4.0/"
-  - name: "GitHub Stars"
-    badge_url: "https://img.shields.io/github/stars/chirag127/VideoSum-AI-Powered-Video-Summarization-Mobile-Platform?style=flat-square&cacheSeconds=86400"
-    link_url: "https://github.com/chirag127/VideoSum-AI-Powered-Video-Summarization-Mobile-Platform/stargazers"
+---
+# Badges configuration for VideoSum-AI-Video-Summarizer-Mobile-App
+
+build_status:
+  url: https://github.com/chirag127/VideoSum-AI-Video-Summarizer-Mobile-App/actions/workflows/ci.yml
+  image: https://img.shields.io/github/actions/workflow/status/chirag127/VideoSum-AI-Video-Summarizer-Mobile-App/ci.yml?style=flat-square
+  alt: Build Status
+
+code_coverage:
+  url: https://github.com/chirag127/VideoSum-AI-Video-Summarizer-Mobile-App
+  image: https://img.shields.io/codecov/c/github/chirag127/VideoSum-AI-Video-Summarizer-Mobile-App?style=flat-square
+  alt: Code Coverage
+
+tech_stack:
+  url: https://github.com/chirag127/VideoSum-AI-Video-Summarizer-Mobile-App
+  image: https://img.shields.io/badge/Tech%20Stack-React%20Native%2C%20Expo%2C%20TypeScript-blue?style=flat-square
+  alt: Tech Stack
+
+lint_format:
+  url: https://github.com/chirag127/VideoSum-AI-Video-Summarizer-Mobile-App
+  image: https://img.shields.io/badge/Lint%2FFormat-Biome-green?style=flat-square
+  alt: Lint/Format
+
+license:
+  url: https://github.com/chirag127/VideoSum-AI-Video-Summarizer-Mobile-App/blob/main/LICENSE
+  image: https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey?style=flat-square
+  alt: License
+
+github_stars:
+  url: https://github.com/chirag127/VideoSum-AI-Video-Summarizer-Mobile-App
+  image: https://img.shields.io/github/stars/chirag127/VideoSum-AI-Video-Summarizer-Mobile-App?style=flat-square
+  alt: GitHub Stars
